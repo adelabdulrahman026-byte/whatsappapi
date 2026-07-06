@@ -5,27 +5,25 @@ const qrcode = require('qrcode');
 const app = express();
 const client = new Client({
     authStrategy: new LocalAuth(),
-    puppeteer: { 
-        args: ['--no-sandbox', '--disable-setuid-sandbox'] 
-    }
+    puppeteer: { args: ['--no-sandbox', '--disable-setuid-sandbox'] }
 });
 
-let qrCodeData = 'جاري التحميل...';
+let qrData = null;
 
 client.on('qr', (qr) => {
     qrcode.toDataURL(qr, (err, url) => {
-        qrCodeData = url;
+        qrData = url;
     });
 });
 
 app.get('/', (req, res) => {
-    if (qrCodeData.startsWith('data:image')) {
-        res.send(`<h1>امسح الكود ده من الواتساب</h1><img src="${qrCodeData}">`);
+    if (qrData) {
+        res.send(`<h1>مسح الكود ده للربط:</h1><img src="${qrData}">`);
     } else {
-        res.send('<h1>جاري تحضير الكود، انتظر ثواني واعمل ريفريش للصفحة...</h1>');
+        res.send('<h1>جاري تحضير الكود... حدث الصفحة بعد لحظات</h1>');
     }
 });
 
-client.on('ready', () => console.log('تم الربط بنجاح؟!'));
+client.on('ready', () => console.log('تم الربط!'));
 client.initialize();
 app.listen(process.env.PORT || 3000);
