@@ -13,9 +13,13 @@ const client = new Client({
     }
 });
 
-client.on('qr', (qr) => {
-    qrcode.generate(qr, { small: true });
-    console.log('اعمل مسح للـ QR Code ده من موبايلك...');
+const qrcode = require('qrcode'); // تأكد إنك ضفت المكتبة دي لو مش موجودة
+
+client.on('qr', async (qr) => {
+    // هيطبع رابط QR Code صغير ومضبوط على شكل صورة
+    const qrImage = await qrcode.toDataURL(qr);
+    console.log('--- افتح الرابط ده في المتصفح عشان تشوف الـ QR Code ---');
+    console.log(qrImage); 
 });
 
 client.on('ready', () => {
