@@ -5,17 +5,17 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+// هنا ضفنا التعديل بتاع السيرفرات السحابية مرة واحدة بس
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        args: ['--no-sandbox', '--disable-setuid-sandbox'] // التعديل الأول للسيرفرات
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
     }
 });
 
-const client = new Client({
-    puppeteer: {
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-    }
+client.on('qr', (qr) => {
+    qrcode.generate(qr, { small: true });
+    console.log('اعمل مسح للـ QR Code ده من موبايلك...');
 });
 
 client.on('ready', () => {
@@ -36,7 +36,6 @@ app.post('/send-message', async (req, res) => {
 
 client.initialize();
 
-// التعديل التاني عشان السيرفر يختار البورت المناسب
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`السيرفر شغال دلوقتي على بورت ${port} 🚀`);
