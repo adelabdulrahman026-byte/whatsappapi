@@ -13,11 +13,10 @@ const client = new Client({
         args: [
             '--no-sandbox', 
             '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage', // بيمنع استخدام الذاكرة المشتركة اللي بتعمل الكراش
+            '--disable-dev-shm-usage',
             '--disable-accelerated-2d-canvas',
             '--no-first-run',
             '--no-zygote',
-            '--single-process', // أهم سطر! بيخلي المتصفح يشتغل في عملية واحدة عشان مياكلش الرامات
             '--disable-gpu'
         ] 
     }
