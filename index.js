@@ -23,7 +23,7 @@ client.on('qr', async (qr) => {
 });
 
 client.on('ready', () => {
-    console.log('الواتساب بتاعك اتربط والـ API جاهز! ✅');
+    console.log('الواتساب بتاعك اتربط والـ API جاهز! ');
 });
 
 app.post('/send-message', async (req, res) => {
