@@ -15,7 +15,7 @@ client.on('qr', async (qr) => {
     console.log('QR جاهز، افتح الرابط أدناه!');
 });
 
-// صفحة ويب بسيطة بتعرض الـ QR كصورة  جداً
+//  ويب بسيطة بتعرض الـ QR كصورة  جداً
 app.get('/', (req, res) => {
     if (qrCodeData) {
         res.send(`<h1>امسح الكود ده من الواتساب</h1><img src="${qrCodeData}">`);
