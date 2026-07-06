@@ -26,6 +26,6 @@ app.get('/', (req, res) => {
     }
 });
 
-client.on('ready', () => console.log('تم الربط بنجاح!'));
+client.on('ready', () => console.log('تم الربط بنجاح؟!'));
 client.initialize();
 app.listen(process.env.PORT || 3000);
