@@ -3,8 +3,6 @@ const qrcode = require('qrcode-terminal');
 const express = require('express');
 
 const app = express();
-app.use(express.json());
-
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
@@ -12,34 +10,21 @@ const client = new Client({
     }
 });
 
-const qrcode = require('qrcode'); // تأكد إنك ضفت المكتبة دي لو مش موجودة
-
-client.on('qr', async (qr) => {
-    // هيطبع رابط QR Code صغير ومضبوط على شكل صورة
-    const qrImage = await qrcode.toDataURL(qr);
-    console.log('--- افتح الرابط ده في المتصفح عشان تشوف الـ QR Code ---');
-    console.log(qrImage); 
+client.on('qr', (qr) => {
+    // الطريقة دي هي الأفضل للـ Logs عشان متطلعش عريضة
+    console.log('QR RECEIVED, SCAN THIS:');
+    qrcode.generate(qr, { small: true });
 });
 
 client.on('ready', () => {
-    console.log('الواتساب بتاعك اتربط والـ API جاهز! ');
+    console.log('Client is ready!');
 });
 
 app.post('/send-message', async (req, res) => {
     const { number, message } = req.body;
-    const chatId = `${number}@c.us`; 
-
-    try {
-        await client.sendMessage(chatId, message);
-        res.status(200).send({ status: 'Success', message: 'الرسالة اتبعتت بنجاح!' });
-    } catch (error) {
-        res.status(500).send({ status: 'Error', error: error.message });
-    }
+    await client.sendMessage(`${number}@c.us`, message);
+    res.send('Message sent');
 });
 
 client.initialize();
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`السيرفر شغال دلوقتي على بورت ${port} 🚀`);
-});
+app.listen(process.env.PORT || 3000);
