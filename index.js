@@ -7,7 +7,8 @@ const app = express();
 app.use(express.json());
 
 const client = new Client({
-    authStrategy: new LocalAuth(),
+    // السطر اللي جاي ده هو السحر اللي هيعمل جلسة جديدة ويتجاهل التعليقة القديمة
+    authStrategy: new LocalAuth({ clientId: 'boda-api-session' }), 
     puppeteer: { 
         headless: true,
         args: [
@@ -21,7 +22,6 @@ const client = new Client({
         ] 
     }
 });
-
 let qrCodeImage = '';
 let isClientReady = false;
 
