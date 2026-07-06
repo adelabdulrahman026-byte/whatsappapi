@@ -79,4 +79,11 @@ app.post('/send-message', async (req, res) => {
 client.initialize();
 
 // تشغيل السيرفر
+// تشغيل السيرفر الأول وفتح الباب العام للإنترنت (0.0.0.0) عشان Render يلقطه فوراً
 const port = process.env.PORT || 3000;
+app.listen(port, '0.0.0.0', () => {
+    console.log(`السيرفر الأساسي قام ومستعد على بورت ${port} 🚀`);
+    
+    // بعد ما السيرفر يقوم وRender يرضى عننا، نبدأ نشغل الواتساب براحتنا
+    client.initialize();
+});
