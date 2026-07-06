@@ -1,4 +1,4 @@
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, NoAuth } = require('whatsapp-web.js');
 const express = require('express');
 const qrcode = require('qrcode');
 
@@ -7,8 +7,7 @@ const app = express();
 app.use(express.json());
 
 const client = new Client({
-    // السطر اللي جاي ده هو السحر اللي هيعمل جلسة جديدة ويتجاهل التعليقة القديمة
-    authStrategy: new LocalAuth({ clientId: 'boda-api-session' }), 
+    authStrategy: new NoAuth(), // ده اللي هيتخطى الملفات البايظة ويبدأ من الصفر
     puppeteer: { 
         headless: true,
         args: [
@@ -16,8 +15,6 @@ const client = new Client({
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
             '--disable-accelerated-2d-canvas',
-            '--no-first-run',
-            '--no-zygote',
             '--disable-gpu'
         ] 
     }
