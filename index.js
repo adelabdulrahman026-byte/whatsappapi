@@ -1,29 +1,28 @@
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const express = require('express');
-const qrcode = require('qrcode');
-
 const app = express();
+
+app.use(express.json());
+
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: { args: ['--no-sandbox', '--disable-setuid-sandbox'] }
 });
 
-let qrData = null;
+client.initialize();
 
-client.on('qr', (qr) => {
-    qrcode.toDataURL(qr, (err, url) => {
-        qrData = url;
-    });
-});
+client.on('ready', () => console.log('Client is ready!'));
 
-app.get('/', (req, res) => {
-    if (qrData) {
-        res.send(`<h1>مسح الكود ده للربط:</h1><img src="${qrData}">`);
-    } else {
-        res.send('<h1>جاري تحضير الكود... حدث الصفحة بعد لحظات</h1>');
+app.post('/send-message', async (req, res) => {
+    const { number, message } = req.body;
+    try {
+        await client.sendMessage(`${number}@c.us`, message);
+        res.send({ status: 'Success' });
+    } catch (err) {
+        res.status(500).send({ error: err.message });
     }
 });
 
-client.on('ready', () => console.log('تم الربط!'));
-client.initialize();
+app.get('/', (req, res) => res.send('API is running!'));
+
 app.listen(process.env.PORT || 3000);
