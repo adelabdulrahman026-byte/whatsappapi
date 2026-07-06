@@ -5,22 +5,24 @@ const qrcode = require('qrcode');
 const app = express();
 const client = new Client({
     authStrategy: new LocalAuth(),
-    puppeteer: { args: ['--no-sandbox', '--disable-setuid-sandbox'] }
+    puppeteer: { 
+        args: ['--no-sandbox', '--disable-setuid-sandbox'] 
+    }
 });
 
-let qrCodeData = '';
+let qrCodeData = 'جاري التحميل...';
 
-client.on('qr', async (qr) => {
-    qrCodeData = await qrcode.toDataURL(qr); // بيحول الـ QR لصورة واضحة
-    console.log('QR جاهز، افتح الرابط أدناه!');
+client.on('qr', (qr) => {
+    qrcode.toDataURL(qr, (err, url) => {
+        qrCodeData = url;
+    });
 });
 
-//  ويب بسيطة بتعرض الـ QR كصورة  جداً
 app.get('/', (req, res) => {
-    if (qrCodeData) {
+    if (qrCodeData.startsWith('data:image')) {
         res.send(`<h1>امسح الكود ده من الواتساب</h1><img src="${qrCodeData}">`);
     } else {
-        res.send('جاري تحضير الكود، استنى ثانية واعمل ريفريش...');
+        res.send('<h1>جاري تحضير الكود، انتظر ثواني واعمل ريفريش للصفحة...</h1>');
     }
 });
 
