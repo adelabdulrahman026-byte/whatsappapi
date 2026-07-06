@@ -5,7 +5,6 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-// هنا ضفنا التعديل بتاع السيرفرات السحابية مرة واحدة بس
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
